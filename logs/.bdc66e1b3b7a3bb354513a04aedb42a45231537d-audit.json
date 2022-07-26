@@ -1,0 +1,19 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 20
+    },
+    "auditLog": "logs/.bdc66e1b3b7a3bb354513a04aedb42a45231537d-audit.json",
+    "files": [
+        {
+            "date": 1648755123254,
+            "name": "logs/driveCenter-api-2022-03-31.log",
+            "hash": "c8236efcde847dede45b2cd2b29418c1"
+        },
+        {
+            "date": 1649838474389,
+            "name": "logs/driveCenter-api-2022-04-13.log",
+            "hash": "794353b5fd65341ddae7d9f3f48820f7"
+        }
+    ]
+}

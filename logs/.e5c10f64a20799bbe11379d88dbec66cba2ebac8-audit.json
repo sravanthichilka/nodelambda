@@ -1,0 +1,14 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 20
+    },
+    "auditLog": "logs/.e5c10f64a20799bbe11379d88dbec66cba2ebac8-audit.json",
+    "files": [
+        {
+            "date": 1649838496526,
+            "name": "logs/birko-api-2022-04-13.log",
+            "hash": "6e9ac4fd9218a05c8ced400b9bd11850"
+        }
+    ]
+}

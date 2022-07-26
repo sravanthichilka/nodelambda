@@ -1,0 +1,406 @@
+## Customers [/customers]
+
+### Customers List [GET /customers?sortBy[firstName]=asc&sortBy[lastName]=asc&recordPerPage=10&currentPage=1&filter[firstLastAndUnique]=yopmail.com&filter[regionId]=1]
+
+
+            "recordPerPage": 10, // records show on per page
+            "currentPage": 1, // view current page 
+            "totalPages": 1, // total pages will be there
+            "totalRecords": 5 // total records exist in db
+
+sortBy["companyName"|"uniqueId"| "firstName"|"lastName"|"email"| "status"]=asc|desc
+
+ascOrdesc: asc or desc.
+
+searching firstName, lastName or uniqueId
+
+filter[firstLastAndUnique]=yopmail.com
+filter[regionId]=1
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+
++ Response 200 (application/json)
+
+            {
+                "status_code": 200,
+                "message": "list",
+                "data": {
+                    "records": [
+                        {
+                              "userId": 8,
+                                "CompanyId": 1,
+                                "email": "tes11t11@gmail.com",
+                                "firstName": "test",
+                                "lastName": "test",
+                                "regionId": 1,
+                                "status": 0,
+                                "role": 4,
+                                "companyName": "test111",
+                                "uniqueId": "test111"
+                        },
+                   
+                    ],
+                    "recordsMetaData": {
+                        "recordPerPage": 10,
+                        "currentPage": 1,
+                        "totalPages": 1,
+                        "totalRecords": 8
+                    }
+                }
+            }
+
+### Change customers Status [PATCH /customers/{customerId}/status]
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+            
+    + Body
+    
+            {
+                "status":1
+            }
+
+
++ Response 200 (application/json)
+
+        {
+            "status_code": 200,
+            "message": "change user status successfully.",
+        }
+
+### Create New Customer [POST /customers]
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+            
+    + Body
+    
+            {
+                "customerUser": {
+                "firstName": "test",
+                "lastName": "test",
+                "email": "tes11t12221@gmail.com",
+                "temporaryPassword": "test",
+                "regionId": 2
+                },
+                "companyInfo":{
+                "companyName" :"test222111",
+                "companyAddress": "test",
+                "uniqueId":"test11221"         
+                },
+                "assignedTeamMember": [1]
+            }
+
+
++ Response 201 (application/json)
+
+            {
+                "status_code": 201,
+                "message": "Customer created successfully",
+                "data": {
+                    "id": 33
+                }
+            }
+        
++ Response 422 (application/json)        
+
+        
+        {
+            "status_code": 422,
+            "message": "Validation Errors"
+        }
+
+### Company Detail [GET /customers/:companyId]
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+
++ Response 200 (application/json)
+
+            {
+                "status_code": 200,
+                "message": "Company Detail",
+                "data": {
+                    "customerUser": {
+                        "firstName": "test",
+                        "lastName": "test",
+                        "email": "test",
+                        "regionId": 2
+                    },
+                    "companyInfo": {
+                        "companyName": "cname_superadmin",
+                        "companyAddress": "test",
+                        "uniqueId": "cnamesuperadmin"
+                    },
+                    "assignedTeamMember": [ {
+                "userId": 5,
+                "email": "teammember@yopmail.com",
+                "firstName": "annapurna",
+                "lastName": "kenguva",
+                "phoneNumber": "8888888888",
+                "status": 1,
+                "role": 3
+            }]
+                }
+            }
+        
++ Response 404 (application/json)        
+
+        
+            {
+                "status_code": 404,
+                "message": "Company data not found"
+            }
+
+### Update Customer [PUT /customers/:companyId]
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+            
+    + Body
+    
+            {
+                "customerUser": {
+                "firstName": "test111",
+                "lastName": "test1111",
+                "regionId": 3
+                },
+                "companyInfo":{
+                "companyName" :"cname_teammember222",
+                "companyAddress": "test222",
+                "uniqueId":"cnamesuperadmin2221"
+                },
+                "assignedTeamMember": [5]
+            }
+
+
++ Response 201 (application/json)
+
+            {
+                "status_code": 200,
+                "message": "Company profile updated",
+                "data": {
+                    "id": "2"
+                }
+            }
+        
++ Response 422 (application/json)        
+
+        
+        {
+            "status_code": 422,
+            "message": "Validation Errors"
+        }
+
+### Create Company User [POST /customers/{companyId}/users]
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+            
+    + Body
+    
+            {
+                  "firstName": "ns",
+                  "lastName": "ns",
+                  "email": "ssss111@yopmail.com",
+                  "temporaryPassword": "ssss111@yopmail.com"
+                }
+
+
++ Response 201 (application/json)
+
+            {
+                "status_code": 201,
+                "message": "Company User created successfully",
+                "data": {
+                    "id": 33
+                }
+            }
+        
++ Response 422 (application/json)        
+
+        
+        {
+            "status_code": 422,
+            "message": "Validation Errors"
+        }
+
+
+### Company User List [GET /customers/{companyId}}/users?sortBy[firstName]=asc&recordPerPage=10&currentPage=1&filter[firstLastAndEmail]=yopmail.com]
+
+
+
+            "recordPerPage": 10, // records show on per page
+            "currentPage": 1, // view current page 
+            "totalPages": 1, // total pages will be there
+            "totalRecords": 5 // total records exist in db
+
+ascOrdesc: asc or desc.
+sortBy[firstName|lastName]=asc
+
+filter[firstLastAndEmail]=yopmail.com
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+
++ Response 200 (application/json)
+
+            {
+                "status_code": 200,
+                "message": "list",
+                "data": {
+                    "records": [
+                        {
+                               "id": 20,
+                                "companyId": 1,
+                                "email": "test12341@yopmail.com",
+                                "firstName": "ns",
+                                "lastName": "ns",
+                                "status": 0
+                        },
+                   
+                    ],
+                    "recordsMetaData": {
+                        "recordPerPage": 10,
+                        "currentPage": 1,
+                        "totalPages": 1,
+                        "totalRecords": 8
+                    }
+                }
+            }
+### Change Company User Status [PATCH /customers/{companyId}}/users/{userId}/status]
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+            
+    + Body
+    
+            {
+                "status":1
+            }
+
+
++ Response 200 (application/json)
+
+        {
+            "status_code": 200,
+            "message": "change user status successfully.",
+        }
+
+### Company User Set Password [PATCH /customers/{companyId}}/users/{userId}/setTemporaryPassword]
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+            
+    + Body
+    
+            {
+                "setTemporaryPassword": "secret"
+            }
+
+
++ Response 200 (application/json)
+
+        {
+            "status_code": 200,
+            "message": "set temporary password successfully.",
+        }
+        
++ Response 401 (application/json)
+
+        {
+            "status_code": 401,
+            "message": "not authorized",
+        }
+        
+        
+### Update User Data [PUT /customers/{companyId}}/users/{userId}]
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+            
+    + Body
+    
+            {
+              "firstName": "ns",
+              "lastName": "ns"             
+            }
+
+
++ Response 200 (application/json)
+
+            {
+                "status_code": 200,
+                "message": "Profile updated successfully",
+                "data": {
+                    "id": 2,
+                    "firstName": "ns",
+                    "lastName": "ns",
+                    "email": "annapurna.kenguva@appitventures.com"
+                }
+            }
+
+### Update onSiteSystemData [PATCH /customers/{companyId}}/onSiteSystemData]
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+            
+    + Body
+    
+            {
+                "link":"superadmin@yopmail.com"
+            }
+
+
++ Response 200 (application/json)
+
+            {
+                "status_code": 200,
+                "message": "link updated successfully."
+            }
+

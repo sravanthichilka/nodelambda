@@ -1,0 +1,18 @@
+org: sravanthi
+app: new
+service: my-nodejs
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region:  ap-south-1
+
+
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - http:
+          method: any
+          path: /{proxy+} 

@@ -1,0 +1,1450 @@
+FORMAT: 1A
+HOST: https://api.birko.com/
+
+# Birko Api
+
+
+
+## Common Points
+
+
+#### Role Keys: 
+- superadmin = 1
+- admin = 2
+- team member = 3
+- customer user = 4
+
+
+#### Enum of User Status : 
+
+- pending =  0
+- active =  1
+- inactive =  2
+
+#### Enum Region: 
+
+- Region 1 = 1 
+- Region 2 = 2
+- Region 3 = 3
+- Region 4 = 4
+
+
+## Authorization [/auth]
+
+
+### Login [POST /auth/login]
+
++ Request (application/json)
+
+     [Figma: Login screen](https://www.figma.com/proto/0qO3Z5R8CdgUBOnIu7VEZT/Birko-Designs-(Internal)?node-id=337%3A19492&scaling=min-zoom&page-id=136%3A2629&starting-point-node-id=337%3A19492&show-proto-sidebar=1)
+      
+      setTemporaryPassword: (boolean) 
+      
+      If is `true` then open [set password screen](https://www.figma.com/proto/0qO3Z5R8CdgUBOnIu7VEZT/Birko-Designs-(Internal)?node-id=337%3A19636&scaling=min-zoom&page-id=136%3A2629&starting-point-node-id=337%3A19492)
+      
+            
+    + Body
+    
+               {
+                    "email": "superadmin@yopmail.com",
+                    "password": "superadmin@yopmail.com"
+                }
+
+
++ Response 200 (application/json)
+
+               {
+            "data": {
+                "user": {
+                    "id": 3,
+                    "email": "superadmin@yopmail.com",
+                    "firstName": "annapurna",
+                    "lastName": "kenguva",
+                    "phoneNumber": "8888888888",
+                    "resetPassword": 0,
+                    "verificationCode": null,
+                    "regionId": 1,
+                    "role": 1,
+                    "status": 1,
+                    "setTemporaryPassword": 0,
+                    "CreatedAt": "2022-01-12T13:10:57.000Z",
+                    "UpdatedAt": "2022-01-12T13:10:57.000Z"
+                },
+                "accessToken": "KJ6bxhvD6C49l762oxBIIXmFNiI",
+                "refreshToken": "i_zL1qZWILjkZAx1wGc-vyztJzyuyOZAEefKPgU"
+            },
+            "message": "login successfully",
+            "status_code": 200
+          }
+
++ Response 422 (application/json)
+
+        {
+            "status_code": 422,
+            "message": "Incorrect credentails."
+        }
+        
+### Refresh Token [POST /auth/refreshToken]
+
+accessToken: expires for every 1 hr; (have to renew using refresh token)
+
+refreshToken: expires for every 1 month; (have to relogin in user credientials)
+(for testing purpose: refreshToken will be expired for every 24 hrs - in dev, staging)
+
+            
++ Request (application/json)
+            
+    + Body
+    
+            {
+                "refreshToken":"eyJh2NDIyNzA4NjV9.Ag6Ki_zL1qZWILjkZAx1wGc-vyztJzyuyOZAEefKPgU"
+            }
+
+
++ Response 200 (application/json)
+
+            {
+                "message": "Provide new access token.",
+                "status_code": 200,
+                "data": {
+                    "accessToken": "AiOjE2NDIwNjU3Nzl9.GLg0sHtmAzj9OeY_hfKkdX12YAEpYp0oSvD5ECZZx48",
+                    "refreshToken": "zl9.MXSYp41-pXLFW4si9U2hn4oCWPiWHr0LtxQU-4btxWk",
+                    "user": {
+                        "id": 3
+                    }
+                }
+            }
+
++ Response 404 (application/json)
+
+        {
+            "status_code": 404,
+            "message": "Invalid/expired refresh token. please login again"
+        }
+        
++ Response 422 (application/json)      
+
+        {
+            "status_code": 422,
+            "message": "Validation Errors"
+        }
+
+
+
+
+### Forgot Password [POST /auth/forgotPassword]
+
+            
++ Request (application/json)
+            
+    + Body
+    
+            {
+                "email":"superadmin@yopmail.com"
+            }
+
+
++ Response 200 (application/json)
+
+        {
+            "message": "An reset link will be send to registered email.",
+            "status_code": 200
+        }
+        
++ Response 404 (application/json)
+
+        {
+            "status_code": 404,
+            "message": "Email does not exist."
+        }
+
+
+### Reset Password [POST /auth/resetPassword]
+
+Extract **token** from resetPassword email link.
+
+            
++ Request (application/json)
+          
+    + Body
+    
+            {
+                "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IkJyaWtvIiwiaWF0IjoxNjQyMDU1MjQ3LCJleHAiOjE2NDIxNDE2NDd9.eRyfKO2GMquP9lnD23FXhWXZLpvNqrV1QB7K4c2AAko",
+                "password": "superadmin@yopmail.com",
+                "confirmPassword": "superadmin@yopmail.com"
+            }
+
+
++ Response 200 (application/json)
+
+            {
+                "message": "Password reset Successfully.",
+                "status_code": 200
+            }
+
++ Response 422 (application/json)
+        
+        {
+            "status_code": 422,
+            "message": "Validation Errors"
+        }
+        
+
+
+### Logout [POST /auth/logout]
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: x123456x
+            
+    + Body
+    
+            {
+                "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9TOKENx123456x"
+            }
+            
+            
+
++ Response 200 (application/json)
+
+        {
+            "status_code": 200,
+            "message": "Logged out Successfully"
+        }
+
+        
+        
+## User [/user]
+
+### Edit Profile [PUT /user/profile]
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: x123456x
+            
+    + Body
+    
+            {
+                "firstName": "test123",
+                "lastName": "te33"
+            }
+            
+            
++ Response 200 (application/json)
+
+            {
+                "status_code": 200,
+                "message": "Edit profile successfully",
+                "data": {
+                    "id": 1,
+                    "firstName": "test123",
+                    "lastName": "te33",
+                    "email": "test@yopmail.com"
+                }
+            }
+
+### View his/her Profile [GET /user/me]
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: x123456x
+            
+
++ Response 200 (application/json)
+
+        {
+            "status_code": 200,
+            "message": "my profile",
+            "data": {
+                "id": 1,
+                "firstName": "test123",
+                "lastName": "te33",
+                "email": "test@yopmail.com"
+            }
+        }
+        
+
+### User Set Password [PATCH /user/setPassword]
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+            
+    + Body
+    
+            {
+                "password": "test123",
+                "confirmPassword": "test123"
+            }
+
+
++ Response 200 (application/json)
+
+        {
+            "status_code": 200,
+            "message": "Password change successfully.",
+        }
+        
++ Response 401 (application/json)
+
+        {
+            "status_code": 401,
+            "message": "not authorized",
+        }
+            
+        
+### My Event Log [GET /user/myEventLog]
+
+  ?filter[eventTypeId]=14
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: x123456x
+            
+
++ Response 200 (application/json)
+
+        {
+        "status_code": 200,
+        "message": "list",
+        "data": {
+            "records": [
+                {
+                    "_id": "623c08c28139e91637aac087",
+                    "userId": 2,
+                    "userName": "annapurna kenguvaa",
+                    "eventMessage": "annapurna kenguvaa has updated teammem22 teammemb3 details.",
+                    "eventTypeId": 14,
+                    "eventTypeLabel": "Team Member Updated",
+                    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.83 Safari/537.36",
+                    "changes": [
+                        "623c08c28139e91637aac080"
+                        ],
+                        "createdAt": "2022-03-24T05:59:30.562Z",
+                        "updatedAt": "2022-03-24T05:59:30.562Z",
+                        "__v": 0
+                    }
+                ],
+                "recordsMetaData": {
+                    "recordPerPage": 10,
+                    "currentPage": 1,
+                    "totalPages": 1,
+                    "totalRecords": 3
+                }
+            }
+        }
+
+
+## Users [/users]
+
+### User List [GET /users?sortBy[firstName]=asc&sortBy[lastName]=asc&recordPerPage=10&currentPage=1&filter[firstLastAndEmail]=yopmail.com&filter[regionId]=1]
+
+
+            "recordPerPage": 10, // records show on per page
+            "currentPage": 1, // view current page 
+            "totalPages": 1, // total pages will be there
+            "totalRecords": 5 // total records exist in db
+
+viewRoleList: role you want to see (example: superadmin = 1)
+
+ascOrdesc: asc or desc.
+
+
+filter[firstLastAndEmail]=yopmail.com
+filter[regionId]=1
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+
++ Response 200 (application/json)
+
+            {
+                "status_code": 200,
+                "message": "list",
+                "data": {
+                    "records": [
+                        {
+                            "id": 3,
+                            "email": "superadmin@yopmail.com",
+                            "firstName": "annapurna",
+                            "lastName": "kenguva",
+                            "phoneNumber": "8888888888",
+                            "resetPassword": 0,
+                            "verificationCode": null,
+                            "regionId": 1,
+                            "role": 1,
+                            "status": 1,
+                            "salt": "Irk1WbOXxAV+RoszgSQ==",
+                            "hash": "fL7hFuX/CTXx19gVpyw==",
+                            "setTemporaryPassword": 0,
+                            "CreatedAt": "2022-01-12T13:10:57.000Z",
+                            "UpdatedAt": "2022-01-12T13:10:57.000Z"
+                        },
+                   
+                    ],
+                    "recordsMetaData": {
+                        "recordPerPage": 10,
+                        "currentPage": 1,
+                        "totalPages": 1,
+                        "totalRecords": 8
+                    }
+                }
+            }
+
+
+### Change User Status [PATCH /users/{userId}/status]
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+            
+    + Body
+    
+            {
+                "status":1
+            }
+
+
++ Response 200 (application/json)
+
+        {
+            "status_code": 200,
+            "message": "change user status successfully.",
+        }
+
+### User Set Password [PATCH /users/{userId}/setTemporaryPassword]
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+            
+    + Body
+    
+            {
+                "setTemporaryPassword": "secret"
+            }
+
+
++ Response 200 (application/json)
+
+        {
+            "status_code": 200,
+            "message": "set temporary password successfully.",
+        }
+        
++ Response 401 (application/json)
+
+        {
+            "status_code": 401,
+            "message": "not authorized",
+        }
+        
+        
+### Update User Data [PUT /users/{userId}]
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+            
+    + Body
+    
+            {
+              "firstName": "ns",
+              "lastName": "ns",
+              "email": "ssss@yopmail.com",
+              "role": 2
+            }
+
+
++ Response 200 (application/json)
+
+            {
+                "status_code": 200,
+                "message": "Profile updated successfully",
+                "data": {
+                    "id": 2,
+                    "firstName": "ns",
+                    "lastName": "ns",
+                    "email": "annapurna.kenguva@appitventures.com",
+                    "role": 2
+                }
+            }
+
+### Create New User [POST /users]
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+            
+    + Body
+    
+            {
+                  "firstName": "ns",
+                  "lastName": "ns",
+                  "email": "ssss111@yopmail.com",
+                  "temporaryPassword": "ssss111@yopmail.com",
+                  "role": 2,
+                  "phoneNumber": "23429993",
+                  "regionId": 1
+                }
+
+
++ Response 201 (application/json)
+
+            {
+                "status_code": 201,
+                "message": "User created successfully",
+                "data": {
+                    "id": 33
+                }
+            }
+        
++ Response 422 (application/json)        
+
+        {
+            "status_code": 422,
+            "message": "Validation Errors"
+        }
+
+
+
+## Team Members [/teammembers]
+
+### User List [GET /teammembers/fetch?filter[firstLastAndEmail]=yopmail.com]
+
+Note :
+
+role is team member and status  is active that will comes in list
+limit is 20 by default
+sorting is firstName asc by default
+
+filter[firstLastAndEmail]=yopmail.com
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+
++ Response 200 (application/json)
+
+            {
+                "status_code": 200,
+                "message": "list",
+                "data": {
+                    "records": [
+                        {
+                            "id": 3,
+                            "email": "superadmin@yopmail.com",
+                            "firstName": "annapurna",
+                            "lastName": "kenguva"
+                            "role": 1,
+                            "status": 1,
+                            "phoneNumber": "8888888888"
+                        },                   
+                    ],
+                }
+            }
+
+
+
+
+## Customers [/customers]
+
+### Customers List [GET /customers?sortBy[firstName]=asc&sortBy[lastName]=asc&recordPerPage=10&currentPage=1&filter[firstLastAndUnique]=yopmail.com&filter[regionId]=1]
+
+
+            "recordPerPage": 10, // records show on per page
+            "currentPage": 1, // view current page 
+            "totalPages": 1, // total pages will be there
+            "totalRecords": 5 // total records exist in db
+
+sortBy["companyName"|"uniqueId"| "firstName"|"lastName"|"email"| "status"]=asc|desc
+
+ascOrdesc: asc or desc.
+
+searching firstName, lastName or uniqueId
+
+filter[firstLastAndUnique]=yopmail.com
+filter[regionId]=1
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+
++ Response 200 (application/json)
+
+            {
+                "status_code": 200,
+                "message": "list",
+                "data": {
+                    "records": [
+                        {
+                              "userId": 8,
+                                "CompanyId": 1,
+                                "email": "tes11t11@gmail.com",
+                                "firstName": "test",
+                                "lastName": "test",
+                                "regionId": 1,
+                                "status": 0,
+                                "role": 4,
+                                "companyName": "test111",
+                                "uniqueId": "test111"
+                        },
+                   
+                    ],
+                    "recordsMetaData": {
+                        "recordPerPage": 10,
+                        "currentPage": 1,
+                        "totalPages": 1,
+                        "totalRecords": 8
+                    }
+                }
+            }
+
+### Change customers Status [PATCH /customers/{customerId}/status]
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+            
+    + Body
+    
+            {
+                "status":1
+            }
+
+
++ Response 200 (application/json)
+
+        {
+            "status_code": 200,
+            "message": "change user status successfully.",
+        }
+
+### Create New Customer [POST /customers]
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+            
+    + Body
+    
+            {
+                "customerUser": {
+                "firstName": "test",
+                "lastName": "test",
+                "email": "tes11t12221@gmail.com",
+                "temporaryPassword": "test",
+                },
+                "companyInfo":{
+                "companyName" :"test222111",
+                "companyAddress": "test",
+                "uniqueId":"test11221",
+                  "regionId": 3
+                },
+                "assignedTeamMember": [1]
+            }
+
+
++ Response 201 (application/json)
+
+            {
+                "status_code": 201,
+                "message": "Customer created successfully",
+                "data": {
+                    "id": 33
+                }
+            }
+        
++ Response 422 (application/json)        
+
+        
+        {
+            "status_code": 422,
+            "message": "Validation Errors"
+        }
+
+### Company Detail [GET /customers/:companyId]
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+
++ Response 200 (application/json)
+
+            {
+                "status_code": 200,
+                "message": "Company Detail",
+                "data": {
+                    "customerUser": {
+                        "firstName": "test",
+                        "lastName": "test",
+                        "email": "test"
+                    },
+                    "companyInfo": {
+                        "companyName": "cname_superadmin",
+                        "companyAddress": "test",
+                        "uniqueId": "cnamesuperadmin",
+                          "regionId": 3
+                    },
+                    "assignedTeamMember": [ {
+                "userId": 5,
+                "email": "teammember@yopmail.com",
+                "firstName": "annapurna",
+                "lastName": "kenguva",
+                "phoneNumber": "8888888888",
+                "status": 1,
+                "role": 3
+            }]
+                }
+            }
+        
++ Response 404 (application/json)        
+
+        
+            {
+                "status_code": 404,
+                "message": "Company data not found"
+            }
+
+### Update Customer [PUT /customers/:companyId]
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+            
+    + Body
+    
+            {
+                "customerUser": {
+                "firstName": "test111",
+                "lastName": "test1111",
+              
+                },
+                "companyInfo":{
+                "companyName" :"cname_teammember222",
+                "companyAddress": "test222",
+                "uniqueId":"cnamesuperadmin2221",
+                  "regionId": 3
+                },
+                "assignedTeamMember": [5]
+            }
+
+
++ Response 201 (application/json)
+
+            {
+                "status_code": 200,
+                "message": "Company profile updated",
+                "data": {
+                    "id": "2"
+                }
+            }
+        
++ Response 422 (application/json)        
+
+        
+        {
+            "status_code": 422,
+            "message": "Validation Errors"
+        }
+
+### Create Company User [POST /customers/{companyId}/users]
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+            
+    + Body
+    
+            {
+                  "firstName": "ns",
+                  "lastName": "ns",
+                  "email": "ssss111@yopmail.com",
+                  "temporaryPassword": "ssss111@yopmail.com"
+                }
+
+
++ Response 201 (application/json)
+
+            {
+                "status_code": 201,
+                "message": "Company User created successfully",
+                "data": {
+                    "id": 33
+                }
+            }
+        
++ Response 422 (application/json)        
+
+        
+        {
+            "status_code": 422,
+            "message": "Validation Errors"
+        }
+
+
+### Company User List [GET /customers/{companyId}}/users?sortBy[firstName]=asc&recordPerPage=10&currentPage=1&filter[firstLastAndEmail]=yopmail.com]
+
+
+
+            "recordPerPage": 10, // records show on per page
+            "currentPage": 1, // view current page 
+            "totalPages": 1, // total pages will be there
+            "totalRecords": 5 // total records exist in db
+
+ascOrdesc: asc or desc.
+sortBy[firstName|lastName]=asc
+
+filter[firstLastAndEmail]=yopmail.com
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+
++ Response 200 (application/json)
+
+            {
+                "status_code": 200,
+                "message": "list",
+                "data": {
+                    "records": [
+                        {
+                               "id": 20,
+                                "companyId": 1,
+                                "email": "test12341@yopmail.com",
+                                "firstName": "ns",
+                                "lastName": "ns",
+                                "status": 0
+                        },
+                   
+                    ],
+                    "recordsMetaData": {
+                        "recordPerPage": 10,
+                        "currentPage": 1,
+                        "totalPages": 1,
+                        "totalRecords": 8
+                    }
+                }
+            }
+### Change Company User Status [PATCH /customers/{companyId}}/users/{userId}/status]
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+            
+    + Body
+    
+            {
+                "status":1
+            }
+
+
++ Response 200 (application/json)
+
+        {
+            "status_code": 200,
+            "message": "change user status successfully.",
+        }
+
+### Company User Set Password [PATCH /customers/{companyId}}/users/{userId}/setTemporaryPassword]
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+            
+    + Body
+    
+            {
+                "setTemporaryPassword": "secret"
+            }
+
+
++ Response 200 (application/json)
+
+        {
+            "status_code": 200,
+            "message": "set temporary password successfully.",
+        }
+        
++ Response 401 (application/json)
+
+        {
+            "status_code": 401,
+            "message": "not authorized",
+        }
+        
+        
+### Update User Data [PUT /customers/{companyId}}/users/{userId}]
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+            
+    + Body
+    
+            {
+              "firstName": "ns",
+              "lastName": "ns"             
+            }
+
+
++ Response 200 (application/json)
+
+            {
+                "status_code": 200,
+                "message": "Profile updated successfully",
+                "data": {
+                    "id": 2,
+                    "firstName": "ns",
+                    "lastName": "ns",
+                    "email": "annapurna.kenguva@appitventures.com"
+                }
+            }
+
+### Update onSiteSystemData [PATCH /customers/{companyId}}/onSiteSystemData]
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+            
+    + Body
+    
+            {
+                "link":"superadmin@yopmail.com"
+            }
+
+
++ Response 200 (application/json)
+
+            {
+                "status_code": 200,
+                "message": "link updated successfully."
+            }
+
+### Create New Document [POST /customers/{companyId}/documents]
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+            
+    + Body
+    
+            {
+                "documentKeyName": "BIRKO_LOGO.png",
+                "documentType": 1,
+                "documentName": "BIRKO_LOGO",
+                "documentFormat": "png",
+                "documentsizeInByte": "4000000"
+            }
+
+
++ Response 201 (application/json)
+
+            {
+                "status_code": 201,
+                "message": "Document created successfully",
+                "data": {
+                    "id": 33
+                }
+            }
+
+### Move Document [GET /customers/{companyId}/documents/{documentId}/getCustomersForMoveDocument?filter[nameOrUniqueId]=appit_9]
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+            
++ Response 200 (application/json)
+
+          {
+                "status_code": 200,
+                "message": "list",
+                "data": {
+                    "records": [
+                        {
+                            "id": 2,
+                            "companyName": "appit_9",
+                            "uniqueId": "appit_uniqueId_9"
+                        }
+                    ]
+                }
+            }
+
+### Move Document To Target Company [PATCH /customers/{companyId}/documents/{documentId}/moveToCompany/{targetCompanyId}]
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+            
++ Response 200 (application/json)
+
+          {
+                "status_code": 200,
+                "message": "Document move successfully."
+            }  
+
+
+
+### update Permission [PATCH /customers/{companyId}/documents/{documentId}/permission]
+
+    permission* : 1: viewer, 2 editor
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+
+    + Body
+    
+            {
+                "permissionSuperAdmin": 1,
+                "permissionAdmin": 1,
+                "permissionTeamMember": 1,
+                "permissionCustomerUser": 1
+            }        
+            
++ Response 200 (application/json)
+
+         {
+            "status_code": 200,
+            "message": "Document Permission updated successfully",
+            "data": {
+                "updateDocPermission": {
+                    "permissionSuperAdmin": 1,
+                    "permissionAdmin": 1,
+                    "permissionTeamMember": 1,
+                    "permissionCustomerUser": 1
+                }
+            }
+        }
+
+### update Document [PUT /customers/{companyId}/documents/{documentId}]
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+
+    + Body
+    
+            {
+                "documentType": 1,
+                "documentName": "BIRKO_LOGOjpg22"
+            }      
+            
++ Response 200 (application/json)
+
+            {
+                    "status_code": 200,
+                    "message": "Document updated successfully"
+            }
+
+### Delete Document [DELETE /customers/{companyId}/documents/{documentId}]
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+            
++ Response 200 (application/json)
+
+            {
+                    "status_code": 200,
+                    "message": "Document deleted successfully"
+            }
+            
+            
+            
+### GET customer list [GET /customers/fetch?filter[companyName]=name]
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+
++ Response 200 (application/json)
+
+        {
+            "status_code": 200,
+            "message": "list",
+            "data": {
+                "records": [
+                    {
+                        "companyId": 1,
+                        "companyName": "appit_8"
+                    },
+                    {
+                        "companyId": 2,
+                        "companyName": "appit_9"
+                    }
+                ]
+            }
+        }
+
+
+### Get file presignd Url [GET /customers/1/documents/getPesigrnedUploadURL?fileExt=png]
+
+fileExt can be: pdf, png, jpeg, jpg
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+
++ Response 200 (application/json)
+
+            {
+                "status_code": 200,
+                "message": "Create Pesigned Link Successfully",
+                "data": {
+                    "url": "https://s3.us-west",
+                    "fields": {
+                        "key": "test",
+                        "bucket": "birko-",
+                        "X-Amz-Algorithm": "AWS4-",
+                        "X-Amz-Credential": "TJljT",
+                        "X-Amz-Date": "20220222",
+                        "Policy": "eyJleHBpcmF",
+                        "X-Amz-Signature": "494f49b3e"
+                    }
+                }
+            }
+            
+
+### download presignd Url [GET /customers/1/documents/28/getPesigrnedDownloadOrViewURL?action=view|download]
+
+action: view or download. default is view
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+
++ Response 200 (application/json)
+
+            {
+                "status_code": 200,
+                "message": "Pesigned Link Successfully",
+                "data": {
+                    "url": "https://dyc0hrb8ywqne.cloudfront.net/UXQ6D3MB06/fe8e74c8.png?_",
+                     "documentKeyName": "fe8e74c8.png"
+                }
+            }
+
+
+### Download Multiple Files [POST /customers/downloadMultipleFiles]
+
+
++ Request (application/json)            
+          
+    + Headers
+    
+            Authorization: x123456x
+            
+    + Body
+    
+               {
+                  "documentIds":[1,2]
+               }
+
++ Response 200 (application/json)
+
+            {
+                "status_code": 200,
+                "message": "Link Successfully",
+                "data": {
+                    "downloadLink": "https://dyc0hrb8ywqne.cloudfront.net/download/dow22-1646650549267.zip?Expires=1646650553808&Key-Pair-Id=K1VSP7APT6LSLU&Signature=GtVAm4b-VYpoXZLgY62VjGO7fJnFDpH6ghzCyryeKCX7wGMpYQ-4Mcs3NwFjpZVjk4gJO-VIHOuOWERH5cOb~lg1tO5Hdy6bb-E77Mz5elFuAuW~y7h1oCtQz~vGnskKMWUVQztVaYK49ux0NWNQdyrhMr3DARlEnwkzsmAogIQGyiFy1p03cC0OrehQzaMaBzuVdUI7iPMdm1VkJnfwjJYEBuQ9l1IT9AmAMZcMQ1zKCk2qPr-CBYWqigXGu6FZUZ1A2jNI8FumKlZX3Y6Xx~DQYfEGd2ujEUNWcZYyAr5DU~DPjzTqKY-~ogvjbN9t9KV1N~vpnVWv~0pyJgGLJw__"
+                }
+            }
+            
+            
+## Document [/documents]
+
+### Document List [GET /documents?companyId=1filter[documentName]=bi&filter[documentType]=1&sortBy[documentTypeName]=asc]
+
+
+            "recordPerPage": 10, // records show on per page
+            "currentPage": 1, // view current page 
+            "totalPages": 1, // total pages will be there
+            "totalRecords": 5 // total records exist in db
+
+sortBy["documentTypeName"|"documentName"]=asc|desc
+
+companyId=1 if you send then specific company Id will comes otherwise all company Id will comes.
+
+ascOrdesc: asc or desc.
+
+searching documentName
+
+filter[documentName]=yopmail.com
+
+permission* : 1: viewer, 2 editor
+
+permissionSuperAdmin: 1: viewer, 2 editor
+permissionAdmin: 1: viewer, 2 editor
+permissionTeamMember: 1: viewer, 2 editor
+permissionCustomerUser: 1: viewer, 2 editor
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+
++ Response 200 (application/json)
+
+            {
+                "status_code": 200,
+                "message": "list",
+                "data": {
+                    "records": [
+                        {
+                            "userId": 3,
+                            "uploadedBy": "annapurna kenguva",
+                            "documentId": 7,
+                            "companyId": 1,
+                            "documentFormat": "jpg",
+                            "documentsizeInByte": "4000000",
+                            "permissionSuperAdmin": 2,
+                            "permissionAdmin": 2,
+                            "permissionTeamMember": 2,
+                            "permissionCustomerUser": 2,
+                            "documentName": "BIRKO_LOGOjpg",
+                            "documentOriginal": "logo.jpg",
+                            "documentType": 1
+                        }
+                    ],
+                    "recordsMetaData": {
+                        "recordPerPage": 10,
+                        "currentPage": 1,
+                        "totalPages": 1,
+                        "totalRecords": 1
+                    }
+                }
+            }
+
+## DocumentTypes [/documentTypes]
+
+### DocumentTypes List [GET /documentTypes/fetch]
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+
++ Response 200 (application/json)
+
+           {
+                "status_code": 200,
+                "message": "list",
+                "data": {
+                    "records": [
+                        {
+                            "id": 7,
+                            "documentTypeName": "Certificates of Analysis"
+                        },
+                        {
+                            "id": 16,
+                            "documentTypeName": "Certificates of Analysis"
+                        }
+                    ]
+                }
+            }
+
+## Regions [/regions]
+
+### Regions List [GET /regions/fetch]
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+
++ Response 200 (application/json)
+
+          {
+            "status_code": 200,
+            "message": "list",
+            "data": {
+                "records": [
+                    {
+                        "id": 1,
+                        "regionName": "Region 1"
+                    },
+                    {
+                        "id": 10,
+                        "regionName": "Region 10"
+                    },
+                    {
+                        "id": 2,
+                        "regionName": "Region 2"
+                    }
+                ]
+            }
+        }
+
+## EventTypes [/eventTypes]
+
+### EventTypes List [GET /eventTypes/fetch]
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+
++ Response 200 (application/json)
+
+           {
+                "status_code": 200,
+                "message": "list",
+                "data": {
+                    "records": [
+                        {
+                            "id": 7,
+                            "eventTypeName": "Login"
+                        },
+                        {
+                            "id": 16,
+                            "eventTypeName": "Document Uploaded"
+                        }
+                    ]
+                }
+            }
+
+## EventLogs [/eventLogs]
+
+### EventLogs List [GET /eventLogs/]
+
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+
++ Response 200 (application/json)
+
+        {
+            "status_code": 200,
+            "message": "list",
+            "data": {
+                "records": [
+                    {
+                        "_id": "623976623af2b939989814ca",
+                        "userId": 3,
+                        "userName": "annapurna kenguva",
+                        "eventMessage": "annapurna kenguva has logged out",
+                        "eventType": 28,
+                        "eventTypeLabel": "Logout",
+                        "userAgent": "PostmanRuntime/7.29.0",
+                        "changes": [],
+                        "createdAt": "2022-03-22T07:10:26.888Z",
+                        "updatedAt": "2022-03-22T07:10:26.888Z",
+                        "__v": 0
+                    },
+                    {
+                        "_id": "6239764c3af2b939989814c8",
+                        "userId": 3,
+                        "userName": "annapurna kenguva",
+                        "eventMessage": "annapurna kenguva has logged in successfully",
+                        "eventType": 1,
+                        "eventTypeLabel": "Login",
+                        "userAgent": "PostmanRuntime/7.29.0",
+                        "changes": [],
+                        "createdAt": "2022-03-22T07:10:04.857Z",
+                        "updatedAt": "2022-03-22T07:10:04.857Z",
+                        "__v": 0
+                    }
+                ],
+                "recordsMetaData": {
+                    "recordPerPage": 10,
+                    "currentPage": 1,
+                    "totalPages": 1,
+                    "totalRecords": 2
+                }
+            }
+        }
+
+

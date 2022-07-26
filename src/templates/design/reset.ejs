@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Birko</title>
+</head>
+<body>
+    <table style="max-width:726px; width: 98%; background-color: #F8F8F8; border: 0px; margin: auto; border-radius: 4px; font-family: 'SF Pro Display', 'SF Pro Icons', 'Roboto', 'Arial', sans-serif;" cellspacing="0" cellpadding="10">
+        <tr>
+            <td style="text-align: left; height: 50px;padding: 40px 0 30px 40px;">
+                <table>
+                    <tr>
+                        <td>
+                            <span style="display:inline-block;">
+                                <img src="<%= imageLogo %>"
+                                    style="max-height:74px;display:inline-block" />
+                            </span>
+                        </td>
+                        <td>
+                            <span
+                                style="color:#00548F; letter-spacing: 0.4px; font-weight:700; font-size:24px; line-height: 24px; margin-left: 5px; ">
+                                Birko
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="color: black; font-weight: 500;font-size: 16px; letter-spacing: 0.4px; line-height: 19px; text-align: left; padding:0px 0px 20px 40px;">
+                Reset Password
+            </td>
+        </tr>
+        <tr> 
+            <td style="color: #000000DE; font-size: 14px;font-weight: 400; letter-spacing: 0.4px;line-height: 25px; text-align: left; padding: 0px 140px 25px 40px">
+                Hi <%= firstName %>,
+            </td>
+        </tr>
+        <tr>
+            <td style="color: #000000DE; font-weight: 400; font-size: 14px; width:400px; line-height: 25px; text-align: left; padding: 0px 0px 0px 40px">
+                We've received a request to reset password. If you don't make the request, just ignore this email. Otherwise, you can reset your password using this link (link expires in 24 hours)
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 40px 0px 40px 40px">
+                <a href="<%= resetLink %>" style="background-color: #0E639F; border-radius:4px; color:#FFFFFF; padding: 10px 15px; text-decoration: none; font-size: 14px; font-weight: 500; letter-spacing: 1.25px; line-height: 16px;">RESET YOUR PASSWORD</a>
+            </td>
+        </tr>
+        <tr>
+            <td style="color: #000000DE; font-weight: 400; font-size: 14px; line-height: 25px; text-align: left; letter-spacing: 0.5px;padding:0px 0px 0px 40px;">
+                Thanks,
+            </td>
+        </tr>
+        <tr>
+            <td style="color: #000000DE; font-weight: 400; font-size: 14px; line-height: 25px; text-align: left; letter-spacing:0.5px;padding:0px 0px 40px 40px;">
+                Birko Team
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

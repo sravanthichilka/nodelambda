@@ -1,0 +1,38 @@
+
+## Team Members [/teammembers]
+
+### User List [GET /teammembers/fetch?filter[firstLastAndEmail]=yopmail.com]
+
+Note :
+
+role is team member and status  is active that will comes in list
+limit is 20 by default
+sorting is firstName asc by default
+
+filter[firstLastAndEmail]=yopmail.com
+
++ Request (application/json)
+            
+    + Headers
+    
+            Authorization: x123456x
+
++ Response 200 (application/json)
+
+            {
+                "status_code": 200,
+                "message": "list",
+                "data": {
+                    "records": [
+                        {
+                            "id": 3,
+                            "email": "superadmin@yopmail.com",
+                            "firstName": "annapurna",
+                            "lastName": "kenguva"
+                            "role": 1,
+                            "status": 1,
+                            "phoneNumber": "8888888888"
+                        },                   
+                    ],
+                }
+            }

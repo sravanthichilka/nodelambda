@@ -1,0 +1,185 @@
+
+## Authorization [/auth]
+
+
+### Login [POST /auth/login]
+
++ Request (application/json)
+
+     [Figma: Login screen](https://www.figma.com/proto/0qO3Z5R8CdgUBOnIu7VEZT/Birko-Designs-(Internal)?node-id=337%3A19492&scaling=min-zoom&page-id=136%3A2629&starting-point-node-id=337%3A19492&show-proto-sidebar=1)
+      
+      setTemporaryPassword: (boolean) 
+      
+      If is `true` then open [set password screen](https://www.figma.com/proto/0qO3Z5R8CdgUBOnIu7VEZT/Birko-Designs-(Internal)?node-id=337%3A19636&scaling=min-zoom&page-id=136%3A2629&starting-point-node-id=337%3A19492)
+      
+            
+    + Body
+    
+               {
+                    "email": "superadmin@yopmail.com",
+                    "password": "superadmin@yopmail.com"
+                }
+
+
++ Response 200 (application/json)
+
+               {
+            "data": {
+                "user": {
+                    "id": 3,
+                    "email": "superadmin@yopmail.com",
+                    "firstName": "annapurna",
+                    "lastName": "kenguva",
+                    "phoneNumber": "8888888888",
+                    "resetPassword": 0,
+                    "verificationCode": null,
+                    "regionId": 1,
+                    "role": 1,
+                    "status": 1,
+                    "setTemporaryPassword": 0,
+                    "CreatedAt": "2022-01-12T13:10:57.000Z",
+                    "UpdatedAt": "2022-01-12T13:10:57.000Z"
+                },
+                "accessToken": "KJ6bxhvD6C49l762oxBIIXmFNiI",
+                "refreshToken": "i_zL1qZWILjkZAx1wGc-vyztJzyuyOZAEefKPgU"
+            },
+            "message": "login successfully",
+            "status_code": 200
+          }
+
++ Response 422 (application/json)
+
+        {
+            "status_code": 422,
+            "message": "Incorrect credentails."
+        }
+        
+### Refresh Token [POST /auth/refreshToken]
+
+accessToken: expires for every 1 hr; (have to renew using refresh token)
+
+refreshToken: expires for every 1 month; (have to relogin in user credientials)
+(for testing purpose: refreshToken will be expired for every 24 hrs - in dev, staging)
+
+            
++ Request (application/json)
+            
+    + Body
+    
+            {
+                "refreshToken":"eyJh2NDIyNzA4NjV9.Ag6Ki_zL1qZWILjkZAx1wGc-vyztJzyuyOZAEefKPgU"
+            }
+
+
++ Response 200 (application/json)
+
+            {
+                "message": "Provide new access token.",
+                "status_code": 200,
+                "data": {
+                    "accessToken": "AiOjE2NDIwNjU3Nzl9.GLg0sHtmAzj9OeY_hfKkdX12YAEpYp0oSvD5ECZZx48",
+                    "refreshToken": "zl9.MXSYp41-pXLFW4si9U2hn4oCWPiWHr0LtxQU-4btxWk",
+                    "user": {
+                        "id": 3
+                    }
+                }
+            }
+
++ Response 404 (application/json)
+
+        {
+            "status_code": 404,
+            "message": "Invalid/expired refresh token. please login again"
+        }
+        
++ Response 422 (application/json)      
+
+        {
+            "status_code": 422,
+            "message": "Validation Errors"
+        }
+
+
+
+
+### Forgot Password [POST /auth/forgotPassword]
+
+            
++ Request (application/json)
+            
+    + Body
+    
+            {
+                "email":"superadmin@yopmail.com"
+            }
+
+
++ Response 200 (application/json)
+
+        {
+            "message": "An reset link will be send to registered email.",
+            "status_code": 200
+        }
+        
++ Response 404 (application/json)
+
+        {
+            "status_code": 404,
+            "message": "Email does not exist."
+        }
+
+
+### Reset Password [POST /auth/resetPassword]
+
+Extract **token** from resetPassword email link.
+
+            
++ Request (application/json)
+          
+    + Body
+    
+            {
+                "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IkJyaWtvIiwiaWF0IjoxNjQyMDU1MjQ3LCJleHAiOjE2NDIxNDE2NDd9.eRyfKO2GMquP9lnD23FXhWXZLpvNqrV1QB7K4c2AAko",
+                "password": "superadmin@yopmail.com",
+                "confirmPassword": "superadmin@yopmail.com"
+            }
+
+
++ Response 200 (application/json)
+
+            {
+                "message": "Password reset Successfully.",
+                "status_code": 200
+            }
+
++ Response 422 (application/json)
+        
+        {
+            "status_code": 422,
+            "message": "Validation Errors"
+        }
+        
+
+
+### Logout [POST /auth/logout]
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: x123456x
+            
+    + Body
+    
+            {
+                "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9TOKENx123456x"
+            }
+            
+            
+
++ Response 200 (application/json)
+
+        {
+            "status_code": 200,
+            "message": "Logged out Successfully"
+        }

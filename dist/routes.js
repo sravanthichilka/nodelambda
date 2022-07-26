@@ -1,0 +1,30 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+const express_1 = __importDefault(require("express"));
+const auth_route_1 = __importDefault(require("./app/auth/auth.route"));
+const users_route_1 = __importDefault(require("./app/users/users.route"));
+const user_route_1 = __importDefault(require("./app/users/user/user.route"));
+const customers_route_1 = __importDefault(require("./app/customers/customers.route"));
+const documents_route_1 = __importDefault(require("./app/documents/documents.route"));
+const teammembers_route_1 = __importDefault(require("./app/teammembers/teammembers.route"));
+const documenttypes_route_1 = __importDefault(require("./app/documenttypes/documenttypes.route"));
+const regions_route_1 = __importDefault(require("./app/regions/regions.route"));
+const eventtypes_route_1 = __importDefault(require("./app/eventtypes/eventtypes.route"));
+const eventlogs_route_1 = __importDefault(require("./app/eventLogs/eventlogs.route"));
+const app = express_1.default();
+app.get("/", function (req, res, next) {
+    res.send("Welcome to Birko");
+});
+app.use(`/auth`, auth_route_1.default);
+app.use(`/users`, users_route_1.default);
+app.use(`/user`, user_route_1.default);
+app.use(`/customers`, customers_route_1.default);
+app.use(`/documents`, documents_route_1.default);
+app.use(`/teammembers`, teammembers_route_1.default);
+app.use(`/documentTypes`, documenttypes_route_1.default);
+app.use(`/regions`, regions_route_1.default);
+app.use(`/eventTypes`, eventtypes_route_1.default);
+app.use(`/eventLogs`, eventlogs_route_1.default);
+module.exports = app;
